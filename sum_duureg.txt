@@ -42,37 +42,36 @@ func main() {
 
 	rows, err := db.Query(`SELECT
 								MAX(aimag_code) aimag_code,
-								MAX(sum_code) sum_code,
-								max(bag_code) bag_code,
-								max(bag_name) bag_name
+								max(sum_code) sum_code,
+								max(sum_name) sum_name
+								
 							FROM
 								gerege_core.grc_addresses
 							GROUP BY
-								aimag_code, sum_code, bag_code`)
+								aimag_code, sum_code`)
 
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer rows.Close()
 
-	type Bag struct {
+	type Sum struct {
 		aimag_code int
 		sum_code   int
-		bag_code   int
-		bag_name   string
+		sum_name   string
 	}
 
-	var a Bag
+	var a Sum
 
 	for rows.Next() {
 
-		if err := rows.Scan(&a.aimag_code, &a.sum_code, &a.bag_code, &a.bag_name); err != nil {
+		if err := rows.Scan(&a.aimag_code, &a.sum_code, &a.sum_name); err != nil {
 			log.Fatal(err)
 		}
 
-		sqlStatement := `INSERT INTO pp_bag_khoroos(aimag_code, sum_code, bag_code, bag_name) VALUES ($1, $2, $3, $4)`
+		sqlStatement := `INSERT INTO pp_sum_districts(aimag_code, sum_code, sum_name) VALUES ($1, $2, $3)`
 
-		_, err = db1.Exec(sqlStatement, a.aimag_code, a.sum_code, a.bag_code, a.bag_name)
+		_, err = db1.Exec(sqlStatement, a.aimag_code, a.sum_code, a.sum_name)
 		if err != nil {
 			panic(err)
 		}

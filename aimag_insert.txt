@@ -42,41 +42,35 @@ func main() {
 
 	rows, err := db.Query(`SELECT
 								MAX(aimag_code) aimag_code,
-								MAX(sum_code) sum_code,
-								max(bag_code) bag_code,
-								max(bag_name) bag_name
+								MAX(aimag_name) aimag_name
 							FROM
 								gerege_core.grc_addresses
 							GROUP BY
-								aimag_code, sum_code, bag_code`)
-
+								aimag_code`)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer rows.Close()
 
-	type Bag struct {
+	type AimagCity struct {
 		aimag_code int
-		sum_code   int
-		bag_code   int
-		bag_name   string
+		aimag_name string
 	}
 
-	var a Bag
+	var a AimagCity
 
 	for rows.Next() {
 
-		if err := rows.Scan(&a.aimag_code, &a.sum_code, &a.bag_code, &a.bag_name); err != nil {
+		if err := rows.Scan(&a.aimag_code, &a.aimag_name); err != nil {
 			log.Fatal(err)
 		}
 
-		sqlStatement := `INSERT INTO pp_bag_khoroos(aimag_code, sum_code, bag_code, bag_name) VALUES ($1, $2, $3, $4)`
+		sqlStatement := `INSERT INTO pp_aimag_cities(aimag_code, aimag_name) VALUES ($1, $2)`
 
-		_, err = db1.Exec(sqlStatement, a.aimag_code, a.sum_code, a.bag_code, a.bag_name)
+		_, err = db1.Exec(sqlStatement, a.aimag_code, a.aimag_name)
 		if err != nil {
 			panic(err)
 		}
-
 		_, err = db1.Exec(`commit`)
 		if err != nil {
 			panic(err)
@@ -84,9 +78,7 @@ func main() {
 
 		// fmt.Println(id, reg_no, phone, email, address, picture, is_xyp_sync, expire_date, issue_date, aimag_code, sum_code, bag_code, civil_id, first_name, last_name, family_name, birth_date, gender, password)
 	}
-
 	fmt.Println("Row inserted successfully!")
-
 	if err := rows.Err(); err != nil {
 		log.Fatal(err)
 	}
