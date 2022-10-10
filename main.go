@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	db, err := sql.Open("godror", `user="electricity_bill" password="UQrF74gFrgegKeRb" connectString="10.0.0.116:1521/pdb1.gerege.local"`)
+	db, err := sql.Open("godror", `user="electricity_bill" password="" connectString="10.0.0.116:1521/pdb1.gerege.local"`)
 	if err != nil {
 		fmt.Println("... Oracle DB Setup Failed")
 		fmt.Println(err)
