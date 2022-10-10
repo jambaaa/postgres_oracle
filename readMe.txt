@@ -1,3 +1,5 @@
+Developed by Purevee on Gerege systemc llc
+
 ```
 #   **Connect Oracle Database from GoLang service**
 # **1.Go DRiver for ORacle installation** 
